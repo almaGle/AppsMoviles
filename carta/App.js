@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button, Image, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import EmojiPicker from 'rn-emoji-keyboard';
@@ -37,8 +37,14 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={background} style={styles.background} />
+    
+    <ScrollView style={styles.container}>
+       {/* Vista previa en tiempo real */}
+       <View style={styles.previewCard}>
+        <Image source={background} style={styles.previewBackground} />
+        <Text style={styles.previewText}>{message}</Text>
+      </View>
+      
       <View style={styles.content}>
         <TextInput
           style={styles.input}
@@ -54,11 +60,10 @@ export default function App() {
         <Button title="Finalizar" onPress={handleSaveCard} />
       </View>
       <StatusBar style="auto" />
-      <EmojiPicker
-        onEmojiSelected={handleEmojiSelect}
-        open={isEmojiPickerOpen}
-        onClose={() => setIsEmojiPickerOpen(false)}
-      />
+      <EmojiPicker onEmojiSelected={handleEmojiSelect} open={isEmojiPickerOpen} onClose={() => setIsEmojiPickerOpen(false)} />
+      
+     
+
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         {cards.map((card, index) => (
           <TouchableOpacity key={index} onPress={() => handleCardPress(card)} style={styles.card}>
@@ -67,12 +72,7 @@ export default function App() {
         ))}
       </ScrollView>
       {selectedCard && (
-        <Modal
-          visible={isModalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={handleCloseModal}
-        >
+        <Modal visible={isModalVisible} transparent={true} animationType="slide" onRequestClose={handleCloseModal}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
@@ -84,21 +84,24 @@ export default function App() {
           </View>
         </Modal>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#89CFF0'
   },
   background: {
+    
     position: 'absolute',
     width: '100%',
     height: '100%',
     zIndex: -1,
   },
   content: {
+    padding: 45,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -165,5 +168,27 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontSize: 16,
+  },
+  previewCard: {
+    margin: 50,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'black'
+  },
+  previewBackground: {
+    width: '100%',
+    height: 150,
+    marginBottom: 10,
+  },
+  previewText: {
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
